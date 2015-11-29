@@ -136,7 +136,8 @@ public class Maze {
 		reset();
 		Cell curCell = maze[x][y];
 		while(curCell.getxCoord() != row && curCell.getyCoord() != col){
-			
+			 
+			if
 			
 		}
 	}

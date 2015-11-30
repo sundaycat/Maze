@@ -135,13 +135,16 @@ public class Maze {
 		}
 	}
 
-	// reset the visit and parent status of each cell in maze
+	// reset status of each cell in maze
 	public void reset() {
 
 		for (int i = 1; i <= row; i++) {
 			for (int j = 1; j <= col; j++) {
-				maze[i][j].setVisit(false);
+				
+				maze[i][j].setStep(-1);
 				maze[i][j].setParent(null);
+				maze[i][j].setVisit(false);
+				maze[i][j].setShortPath(false);
 			}
 		}
 	}

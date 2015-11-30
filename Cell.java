@@ -6,6 +6,12 @@ public class Cell {
 	private int xCoord;
 	private int yCoord;
 
+	// Walls of Cell on four directions
+	private boolean up;
+	private boolean down;
+	private boolean left;
+	private boolean right;
+
 	// Cell's value, default value set to -1
 	private int step;
 
@@ -18,12 +24,6 @@ public class Cell {
 	// Denote whether a cell has been visited or not
 	private boolean visit;
 
-	// Walls of Cell on four directions
-	private boolean up;
-	private boolean down;
-	private boolean left;
-	private boolean right;
-
 	// initialize the cells
 	public Cell(int xCoord, int yCoord) {
 
@@ -32,12 +32,12 @@ public class Cell {
 
 		step = -1;
 		parent = null;
-		
+
 		up = false;
 		down = false;
 		left = false;
 		right = false;
-		
+
 		visit = false;
 		shortPath = false;
 	}

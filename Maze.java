@@ -18,7 +18,6 @@ public class Maze {
 		return myRandGen.nextDouble(); // random in 0-1
 	}
 	
-	
 	public Maze(int row, int col) {
 
 		this.row = row;
@@ -54,7 +53,7 @@ public class Maze {
 		int totalCells = row * col;
 		
 		Cell curCell = maze[x][y];
-		//Random rnd = new Random();
+		Random rnd = new Random();
 		Stack<Cell> cellStack = new Stack<Cell>();
 		while (visitedCells < totalCells) {
 
@@ -147,6 +146,7 @@ public class Maze {
 		}
 	}
 
+	//x, y denote the coordinate of the starting point.
 	public void depthFirstSearch(int x, int y) {
 
 		// reset the visit and parent status of each cell
@@ -155,10 +155,9 @@ public class Maze {
 		int vOrder = 0;
 		Cell curCell = maze[x][y];
 		Stack<Cell> cellStack = new Stack<Cell>();
-		while (!(curCell.getxCoord() == row && curCell.getyCoord() == col)) {
-
-			x = curCell.getxCoord();
-			y = curCell.getyCoord();
+		
+		// Cell with coordinator (row, col) is the exit.
+		while (!(x == row && y == col)) {
 
 			// check if there is a unexplored path on the up, left, right and
 			// down direction respectively.
@@ -179,17 +178,7 @@ public class Maze {
 					cellStack.push(curCell);
 					curCell = maze[x][y + 1];
 
-				} else if (dnPath) {
-
-					if (!curCell.isVisit()) {
-						curCell.setStep(vOrder++);
-						curCell.setVisit(true);
-					}
-					maze[x + 1][y].setParent(curCell);
-					cellStack.push(curCell);
-					curCell = maze[x + 1][y];
-					
-				}else if (upPath) {
+				} else if (upPath) {
 
 					if (!curCell.isVisit()) {
 						curCell.setStep(vOrder++);
@@ -209,6 +198,16 @@ public class Maze {
 					cellStack.push(curCell);
 					curCell = maze[x][y - 1];
 
+				}else if (dnPath) {
+
+					if (!curCell.isVisit()) {
+						curCell.setStep(vOrder++);
+						curCell.setVisit(true);
+					}
+					maze[x + 1][y].setParent(curCell);
+					cellStack.push(curCell);
+					curCell = maze[x + 1][y];
+					
 				}
 
 			} else {
@@ -219,7 +218,9 @@ public class Maze {
 				}
 				curCell = cellStack.pop();
 			}
-
+			
+			x = curCell.getxCoord();
+			y = curCell.getyCoord();
 		}
 
 		curCell.setStep(vOrder);
@@ -331,7 +332,7 @@ public class Maze {
 
 				// print out the cells contain in the solution
 				int step = maze[i][j].getStep();
-				if ((step != 0) || (i == 1 && j == 1)) {
+				if ((step != -1)) {
 					String str = (step >= 10) ? "" : " ";
 					sb.append(step + str);
 				} else {

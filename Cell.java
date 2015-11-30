@@ -6,7 +6,7 @@ public class Cell {
 	private int xCoord;
 	private int yCoord;
 
-	// Cell's value
+	// Cell's value, default value set to -1
 	private int step;
 
 	// Denote the parent of each cell
@@ -30,7 +30,7 @@ public class Cell {
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
 
-		step = 0;
+		step = -1;
 		parent = null;
 		
 		up = false;

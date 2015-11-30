@@ -122,17 +122,20 @@ public class Maze {
 		}
 	}
 
-	// reset the visit status of each cell in maze
+	// reset the visit and parent status of each cell in maze
 	public void reset() {
 
-		for (int i = 1; i <= row; i++)
-			for (int j = 1; j <= col; j++)
+		for (int i = 1; i <= row; i++) {
+			for (int j = 1; j <= col; j++) {
 				maze[i][j].setVisit(false);
+				maze[i][j].setParent(null);
+			}
+		}
 	}
 
 	public void depthFirstSearch(int x, int y) {
 
-		// reset the visit status of each cell
+		// reset the visit and parent status of each cell
 		reset();
 
 		int vOrder = 0;
@@ -161,9 +164,9 @@ public class Maze {
 					maze[x - 1][y].setParent(curCell);
 					cellStack.push(curCell);
 					curCell = maze[x - 1][y];
-					
+
 				} else if (ltPath) {
-					
+
 					if (!curCell.isVisit()) {
 						curCell.setStep(vOrder++);
 						curCell.setVisit(true);
@@ -171,9 +174,9 @@ public class Maze {
 					maze[x][y - 1].setParent(curCell);
 					cellStack.push(curCell);
 					curCell = maze[x][y - 1];
-					
+
 				} else if (rtPath) {
-					
+
 					if (!curCell.isVisit()) {
 						curCell.setStep(vOrder++);
 						curCell.setVisit(true);
@@ -181,13 +184,13 @@ public class Maze {
 					maze[x][y + 1].setParent(curCell);
 					cellStack.push(curCell);
 					curCell = maze[x][y + 1];
-					
+
 				} else if (dnPath) {
-					
+
 					if (!curCell.isVisit()) {
 						curCell.setStep(vOrder++);
 						curCell.setVisit(true);
-					}					
+					}
 					maze[x + 1][y].setParent(curCell);
 					cellStack.push(curCell);
 					curCell = maze[x + 1][y];
@@ -203,12 +206,31 @@ public class Maze {
 			}
 
 		}
-		
+
 		curCell.setStep(vOrder);
 	}
 
-	@Override
-	public String toString() {
+	public String toString(int printType) {
+
+		String rtStr = null;
+		switch (printType) {
+		case 1: // print maze
+			rtStr = printGeneratedMaze();
+			break;
+		case 2: // print solution
+			rtStr = printSolution();
+			break;
+		case 3: // print shortest path
+			rtStr = printShortestPath();
+			break;
+		default:
+			rtStr = "Please select among 1,2 and 3";
+		}
+
+		return rtStr;
+	}
+
+	private String printGeneratedMaze() {
 
 		StringBuffer sb = new StringBuffer();
 		maze[1][1].setUp(true);
@@ -239,14 +261,58 @@ public class Maze {
 				}
 
 				// print out the empty space of cell
-				// sb.append("  ");
+				sb.append("  ");
+			}
+
+			sb.append("|");
+			sb.append('\n');
+		}
+
+		// print out the last horizontal wall
+		for (int i = 1; i <= col - 1; i++) {
+			sb.append("+--");
+		}
+		sb.append("+");
+		sb.append("  +");
+
+		return sb.toString();
+	}
+
+	private String printSolution() {
+
+		StringBuffer sb = new StringBuffer();
+		maze[1][1].setUp(true);
+		maze[row][col].setDown(true);
+
+		for (int i = 1; i <= row; i++) {
+
+			// print out horizontal wall
+			for (int j = 1; j <= col; j++) {
+				sb.append("+");
+				if (maze[i][j].isUp()) {
+					sb.append("  ");
+				} else {
+					sb.append("--");
+				}
+			}
+
+			sb.append("+");
+			sb.append('\n');
+
+			// print out vertical wall
+			for (int j = 1; j <= col; j++) {
+				// print out left wall
+				if (maze[i][j].isLeft()) {
+					sb.append(" ");
+				} else {
+					sb.append("|");
+				}
+
+				// print out the cells contain in the solution
 				int step = maze[i][j].getStep();
 				if ((step != 0) || (i == 1 && j == 1)) {
-					if(step >= 10){
-						sb.append(step + "");
-					}else{
-						sb.append(step + " ");
-					}
+					String str = (step >= 10) ? "" : " ";
+					sb.append(step + str);
 				} else {
 					sb.append("  ");
 				}
@@ -265,4 +331,66 @@ public class Maze {
 
 		return sb.toString();
 	}
+
+	private String printShortestPath() {
+
+		// Use the exit cell to backtrack all the cells that on the shortest
+		// path and set their shortPath variable to true
+		Cell curCell = maze[row][col];
+		curCell.setShortPath(true);
+		while (curCell.getParent() != null) {
+			curCell.getParent().setShortPath(true);
+			curCell = curCell.getParent();
+		}
+
+		StringBuffer sb = new StringBuffer();
+		maze[1][1].setUp(true);
+		maze[row][col].setDown(true);
+
+		for (int i = 1; i <= row; i++) {
+
+			// print out horizontal wall
+			for (int j = 1; j <= col; j++) {
+				sb.append("+");
+				if (maze[i][j].isUp()) {
+					sb.append("  ");
+				} else {
+					sb.append("--");
+				}
+			}
+
+			sb.append("+");
+			sb.append('\n');
+
+			// print out vertical wall
+			for (int j = 1; j <= col; j++) {
+				// print out left wall
+				if (maze[i][j].isLeft()) {
+					sb.append(" ");
+				} else {
+					sb.append("|");
+				}
+
+				// print out the cell on the shortest path
+				if (maze[i][j].isShortPath()) {
+					sb.append("# ");
+				} else {
+					sb.append("  ");
+				}
+			}
+
+			sb.append("|");
+			sb.append('\n');
+		}
+
+		// print out the last horizontal wall
+		for (int i = 1; i <= col - 1; i++) {
+			sb.append("+--");
+		}
+		sb.append("+");
+		sb.append("  +");
+
+		return sb.toString();
+	}
+
 }

@@ -1,17 +1,23 @@
 package sjsu.cs146.project3;
+
 public class Cell {
-	
+
 	// Cell's coordinator on the maze
 	private int xCoord;
 	private int yCoord;
-	
+
 	// Cell's value
 	private int step;
+
+	// Denote the parent of each cell
 	private Cell parent;
-	
+
+	// Denote whether the cell is on the shortest path or not
+	private boolean shortPath;
+
 	// Denote whether a cell has been visited or not
 	private boolean visit;
-	
+
 	// Walls of Cell on four directions
 	private boolean up;
 	private boolean down;
@@ -30,10 +36,10 @@ public class Cell {
 		left = false;
 		right = false;
 	}
-	
-	//initialize the boundary entries
-	public Cell(boolean visit){
-		
+
+	// initialize the boundary entries
+	public Cell(boolean visit) {
+
 		this.visit = true;
 	}
 
@@ -113,7 +119,13 @@ public class Cell {
 	public void setParent(Cell parent) {
 		this.parent = parent;
 	}
-	
-	
+
+	public boolean isShortPath() {
+		return shortPath;
+	}
+
+	public void setShortPath(boolean shortPath) {
+		this.shortPath = shortPath;
+	}
 
 }

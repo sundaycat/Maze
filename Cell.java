@@ -105,6 +105,14 @@ public class Cell {
 	public void setStep(int step) {
 		this.step = step;
 	}
+
+	public Cell getParent() {
+		return parent;
+	}
+
+	public void setParent(Cell parent) {
+		this.parent = parent;
+	}
 	
 	
 

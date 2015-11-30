@@ -30,7 +30,7 @@ public class Maze {
 		for (int i = 1; i <= row; i++)
 			for (int j = 1; j <= col; j++)
 				maze[i][j] = new Cell(i, j);
-		
+
 		// generate the maze
 		generate(1, 1);
 	}
@@ -121,34 +121,89 @@ public class Maze {
 			}
 		}
 	}
-	
+
 	// reset the visit status of each cell in maze
-	public void reset(){
-		
+	public void reset() {
+
 		for (int i = 1; i <= row; i++)
 			for (int j = 1; j <= col; j++)
-				maze[i][j].setVisit(false);;
+				maze[i][j].setVisit(false);
+		;
 	}
-	
-	public void depthFirstSearch(int x, int y){
-		
+
+	public void depthFirstSearch(int x, int y) {
+
 		// reset the visit status of each cell
 		reset();
+
+		int vOrder = 0;
 		Cell curCell = maze[x][y];
-		while(curCell.getxCoord() != row && curCell.getyCoord() != col){
-			 
-			if
-			
+		Stack<Cell> cellStack = new Stack<Cell>();
+		while (curCell.getxCoord() != row && curCell.getyCoord() != col) {
+
+			x = curCell.getxCoord();
+			y = curCell.getyCoord();
+
+			// check if there is a unexplored path on the up, left, right and
+			// down direction respectively.
+			boolean upPath = maze[x][y].isUp() && !maze[x - 1][y].isVisit();
+			boolean ltPath = maze[x][y].isLeft() && !maze[x][y - 1].isVisit();
+			boolean rtPath = maze[x][y].isRight() && !maze[x][y + 1].isVisit();
+			boolean dnPath = maze[x][y].isDown() && !maze[x + 1][y].isVisit();
+
+			if (upPath || ltPath || rtPath || dnPath) {
+
+				if (upPath) {
+					curCell.setStep(vOrder++);
+					maze[x - 1][y].setParent(curCell);
+					curCell.setVisit(true);
+					cellStack.push(curCell);
+					curCell = maze[x - 1][y];
+				}
+
+				if (ltPath) {
+					curCell.setStep(vOrder++);
+					maze[x][y - 1].setParent(curCell);
+					curCell.setVisit(true);
+					cellStack.push(curCell);
+					curCell = maze[x][y - 1];
+				}
+
+				if (rtPath) {
+					curCell.setStep(vOrder++);
+					maze[x][y + 1].setParent(curCell);
+					curCell.setVisit(true);
+					cellStack.push(curCell);
+					curCell = maze[x][y + 1];
+				}
+
+				if (dnPath) {
+					curCell.setStep(vOrder++);
+					maze[x + 1][y].setParent(curCell);
+					curCell.setVisit(true);
+					cellStack.push(curCell);
+					curCell = maze[x + 1][y];
+				}
+
+			} else {
+
+				if (!curCell.isVisit()) {
+					curCell.setStep(vOrder++);
+					curCell.setVisit(true);
+				}
+				curCell = cellStack.pop();
+			}
+
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 
 		StringBuffer sb = new StringBuffer();
 		maze[1][1].setUp(true);
 		maze[row][col].setDown(true);
-		
+
 		for (int i = 1; i <= row; i++) {
 
 			// print out horizontal wall
@@ -174,8 +229,13 @@ public class Maze {
 				}
 
 				// print out the empty space of cell
-				sb.append("  ");
-				// sb.append(maze[i][j].getStep() + " ");
+				// sb.append("  ");
+				int step = maze[i][j].getStep();
+				if (step != 0) {
+					sb.append(step + " ");
+				} else {
+					sb.append("  ");
+				}
 			}
 
 			sb.append("|");
@@ -183,7 +243,7 @@ public class Maze {
 		}
 
 		// print out the last horizontal wall
-		for (int i = 1; i <= col-1; i++) {
+		for (int i = 1; i <= col - 1; i++) {
 			sb.append("+--");
 		}
 		sb.append("+");

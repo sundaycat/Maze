@@ -30,11 +30,16 @@ public class Cell {
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
 
-		visit = false;
+		step = 0;
+		parent = null;
+		
 		up = false;
 		down = false;
 		left = false;
 		right = false;
+		
+		visit = false;
+		shortPath = false;
 	}
 
 	// initialize the boundary entries

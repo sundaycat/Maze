@@ -4,7 +4,7 @@ public class MazeTest {
 	
 	public static void main(String[] args){
 		
-		Maze test = new Maze(4,4);
+		Maze test = new Maze(10,10);
 		System.out.println(test.toString(1));
 		
 		test.depthFirstSearch(1, 1);

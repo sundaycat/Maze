@@ -1,5 +1,7 @@
 package sjsu.cs146.project3;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Stack;
 
@@ -8,12 +10,23 @@ public class Maze {
 	private int row;
 	private int col;
 	private Cell[][] maze = null;
-
+	
+	// Professor's code
+	private Random myRandGen;
+	
+	double myrandom(){
+		return myRandGen.nextDouble(); // random in 0-1
+	}
+	
+	
 	public Maze(int row, int col) {
 
 		this.row = row;
 		this.col = col;
-
+		
+		// Profess's code
+		myRandGen = new Random(0); // seed is 0
+		
 		// maintain an (row+2) x (col+2) grid of cells to avoid tedious special
 		// cases
 		maze = new Cell[row + 2][col + 2];
@@ -39,9 +52,9 @@ public class Maze {
 
 		int visitedCells = 1;
 		int totalCells = row * col;
-
+		
 		Cell curCell = maze[x][y];
-		Random rnd = new Random();
+		//Random rnd = new Random();
 		Stack<Cell> cellStack = new Stack<Cell>();
 		while (visitedCells < totalCells) {
 
@@ -53,7 +66,8 @@ public class Maze {
 					|| !maze[x][y + 1].isVisit() || !maze[x][y - 1].isVisit()) {
 
 				// pick a random neighbor with all walls intact
-				int dirs = rnd.nextInt(4) + 1;
+				int dirs = (int)(myrandom()*4) + 1;  				//prof's code
+				//int dirs = rnd.nextInt(4) + 1;
 				switch (dirs) {
 				case 1: // Up
 					// If the cell hasn't been visit before, then remove walls
@@ -155,7 +169,27 @@ public class Maze {
 
 			if (upPath || ltPath || rtPath || dnPath) {
 
-				if (upPath) {
+				if (rtPath) {
+
+					if (!curCell.isVisit()) {
+						curCell.setStep(vOrder++);
+						curCell.setVisit(true);
+					}
+					maze[x][y + 1].setParent(curCell);
+					cellStack.push(curCell);
+					curCell = maze[x][y + 1];
+
+				} else if (dnPath) {
+
+					if (!curCell.isVisit()) {
+						curCell.setStep(vOrder++);
+						curCell.setVisit(true);
+					}
+					maze[x + 1][y].setParent(curCell);
+					cellStack.push(curCell);
+					curCell = maze[x + 1][y];
+					
+				}else if (upPath) {
 
 					if (!curCell.isVisit()) {
 						curCell.setStep(vOrder++);
@@ -175,25 +209,6 @@ public class Maze {
 					cellStack.push(curCell);
 					curCell = maze[x][y - 1];
 
-				} else if (rtPath) {
-
-					if (!curCell.isVisit()) {
-						curCell.setStep(vOrder++);
-						curCell.setVisit(true);
-					}
-					maze[x][y + 1].setParent(curCell);
-					cellStack.push(curCell);
-					curCell = maze[x][y + 1];
-
-				} else if (dnPath) {
-
-					if (!curCell.isVisit()) {
-						curCell.setStep(vOrder++);
-						curCell.setVisit(true);
-					}
-					maze[x + 1][y].setParent(curCell);
-					cellStack.push(curCell);
-					curCell = maze[x + 1][y];
 				}
 
 			} else {
@@ -210,6 +225,12 @@ public class Maze {
 		curCell.setStep(vOrder);
 	}
 
+	public void breadthFirstSearch(int x, int y) {
+
+		// reset the visit and parent status of each cell
+		reset();
+	}
+	
 	public String toString(int printType) {
 
 		String rtStr = null;

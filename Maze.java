@@ -128,7 +128,6 @@ public class Maze {
 		for (int i = 1; i <= row; i++)
 			for (int j = 1; j <= col; j++)
 				maze[i][j].setVisit(false);
-		;
 	}
 
 	public void depthFirstSearch(int x, int y) {
@@ -139,7 +138,7 @@ public class Maze {
 		int vOrder = 0;
 		Cell curCell = maze[x][y];
 		Stack<Cell> cellStack = new Stack<Cell>();
-		while (curCell.getxCoord() != row && curCell.getyCoord() != col) {
+		while (!(curCell.getxCoord() == row && curCell.getyCoord() == col)) {
 
 			x = curCell.getxCoord();
 			y = curCell.getyCoord();
@@ -154,33 +153,42 @@ public class Maze {
 			if (upPath || ltPath || rtPath || dnPath) {
 
 				if (upPath) {
-					curCell.setStep(vOrder++);
+
+					if (!curCell.isVisit()) {
+						curCell.setStep(vOrder++);
+						curCell.setVisit(true);
+					}
 					maze[x - 1][y].setParent(curCell);
-					curCell.setVisit(true);
 					cellStack.push(curCell);
 					curCell = maze[x - 1][y];
-				}
-
-				if (ltPath) {
-					curCell.setStep(vOrder++);
+					
+				} else if (ltPath) {
+					
+					if (!curCell.isVisit()) {
+						curCell.setStep(vOrder++);
+						curCell.setVisit(true);
+					}
 					maze[x][y - 1].setParent(curCell);
-					curCell.setVisit(true);
 					cellStack.push(curCell);
 					curCell = maze[x][y - 1];
-				}
-
-				if (rtPath) {
-					curCell.setStep(vOrder++);
+					
+				} else if (rtPath) {
+					
+					if (!curCell.isVisit()) {
+						curCell.setStep(vOrder++);
+						curCell.setVisit(true);
+					}
 					maze[x][y + 1].setParent(curCell);
-					curCell.setVisit(true);
 					cellStack.push(curCell);
 					curCell = maze[x][y + 1];
-				}
-
-				if (dnPath) {
-					curCell.setStep(vOrder++);
+					
+				} else if (dnPath) {
+					
+					if (!curCell.isVisit()) {
+						curCell.setStep(vOrder++);
+						curCell.setVisit(true);
+					}					
 					maze[x + 1][y].setParent(curCell);
-					curCell.setVisit(true);
 					cellStack.push(curCell);
 					curCell = maze[x + 1][y];
 				}
@@ -195,6 +203,8 @@ public class Maze {
 			}
 
 		}
+		
+		curCell.setStep(vOrder);
 	}
 
 	@Override
@@ -231,8 +241,12 @@ public class Maze {
 				// print out the empty space of cell
 				// sb.append("  ");
 				int step = maze[i][j].getStep();
-				if (step != 0) {
-					sb.append(step + " ");
+				if ((step != 0) || (i == 1 && j == 1)) {
+					if(step >= 10){
+						sb.append(step + "");
+					}else{
+						sb.append(step + " ");
+					}
 				} else {
 					sb.append("  ");
 				}

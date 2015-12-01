@@ -6,7 +6,7 @@ public class Cell {
 	private int xCoord;
 	private int yCoord;
 
-	// Walls of Cell on four directions
+	// Walls of Cell on four directions，true: connected, false:block
 	private boolean up;
 	private boolean down;
 	private boolean left;
@@ -46,11 +46,6 @@ public class Cell {
 	public Cell(boolean visit) {
 
 		this.visit = true;
-	}
-
-	public boolean isIntact() {
-
-		return (up && down && left && right) ? true : false;
 	}
 
 	public boolean isUp() {

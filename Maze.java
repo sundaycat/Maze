@@ -46,23 +46,23 @@ public class Maze {
 		// generate the maze
 		generate(1, 1);
 	}
-	
+
 	public void generate(int x, int y) {
 
 		int visitedCells = 0;
 		int totalCells = row * col;
 
 		Cell curCell = maze[x][y];
-		//Random rnd = new Random();
+		Random rnd = new Random();
 		Stack<Cell> cellStack = new Stack<Cell>();
 		while (visitedCells < totalCells) {
-			
+
 			// If the cell has never been visited, then set it to be visited.
-			if(!curCell.isVisit()){
+			if (!curCell.isVisit()) {
 				curCell.setVisit(true);
 				visitedCells++;
 			}
-			
+
 			// Get the current coordinator
 			x = curCell.getxCoord();
 			y = curCell.getyCoord();
@@ -76,45 +76,53 @@ public class Maze {
 				//int dirs = rnd.nextInt(4) + 1;
 				switch (dirs) {
 				case 1: // Up
-					// If the upper cell hasn't been visit before, then remove walls
+					// If the upper cell hasn't been visit before, then remove
+					// walls
 					if (!maze[x - 1][y].isVisit()) {
 						maze[x - 1][y].setDown(true);
 						maze[x][y].setUp(true);
-						
-						//push the current cell into stack and set the upside cell as current.
+
+						// push the current cell into stack and set the upside
+						// cell as current.
 						cellStack.push(maze[x][y]);
 						curCell = maze[x - 1][y];
 					}
 					break;
 				case 2: // Left
-					// If the left cell hasn't been visit before, then remove walls
+					// If the left cell hasn't been visit before, then remove
+					// walls
 					if (!maze[x][y - 1].isVisit()) {
 						maze[x][y - 1].setRight(true);
 						maze[x][y].setLeft(true);
 
-						//push the current cell into stack and set the left side cell as current.
+						// push the current cell into stack and set the left
+						// side cell as current.
 						cellStack.push(maze[x][y]);
 						curCell = maze[x][y - 1];
 					}
 					break;
 				case 3: // Right
-					// If the right cell hasn't been visit before, then remove walls
+					// If the right cell hasn't been visit before, then remove
+					// walls
 					if (!maze[x][y + 1].isVisit()) {
 						maze[x][y + 1].setLeft(true);
 						maze[x][y].setRight(true);
-						
-						//push the current cell into stack and set the right side cell as current.
+
+						// push the current cell into stack and set the right
+						// side cell as current.
 						cellStack.push(maze[x][y]);
 						curCell = maze[x][y + 1];
 					}
 					break;
 				case 4: // Down
-					// If the down side cell hasn't been visit before, then remove walls
+					// If the down side cell hasn't been visit before, then
+					// remove walls
 					if (!maze[x + 1][y].isVisit()) {
 						maze[x + 1][y].setUp(true);
 						maze[x][y].setDown(true);
 
-						//push the current cell into stack and set the down side cell as current.
+						// push the current cell into stack and set the down
+						// side cell as current.
 						cellStack.push(maze[x][y]);
 						curCell = maze[x + 1][y];
 					}
@@ -139,9 +147,10 @@ public class Maze {
 		int vOrder = 0;
 		Cell curCell = maze[x][y];
 		Stack<Cell> cellStack = new Stack<Cell>();
-
-		// Cell with coordinator (row, col) is the exit.
-		while (!(x == row && y == col)) {
+		cellStack.push(curCell);
+		// Cell with coordinator (row, col) is the exit. Stack is empty mean
+		// there is no way out
+		while (!cellStack.isEmpty()) {
 
 			// If the current cell has never been visited, then set its status
 			// to be visited
@@ -149,6 +158,10 @@ public class Maze {
 				curCell.setStep(vOrder++);
 				curCell.setVisit(true);
 			}
+
+			// Stop searching when reach the exit
+			if (x == row && y == col)
+				break;
 
 			// check if there is a unexplored path on the up, left, right and
 			// down direction respectively.
@@ -158,7 +171,7 @@ public class Maze {
 			boolean dnPath = maze[x][y].isDown() && !maze[x + 1][y].isVisit();
 
 			if (upPath || ltPath || rtPath || dnPath) {
-				
+
 				// chosse one of the connceted cells to keep searching for exit
 				if (rtPath) {
 
@@ -198,7 +211,7 @@ public class Maze {
 			y = curCell.getyCoord();
 		}
 
-		curCell.setStep(vOrder);
+		// curCell.setStep(vOrder);
 	}
 
 	public void breadthFirstSearch(int x, int y) {
@@ -211,7 +224,7 @@ public class Maze {
 		Cell curCell = maze[x][y];
 		cellQueue.add(curCell);
 		// Exit either the queue is empty or we reach the exit. The queue is
-		// empty mean there is not exit
+		// empty mean there is not exit or we have traverse all the cells
 		while (!cellQueue.isEmpty()) {
 
 			// pop off the head of this queue
@@ -263,7 +276,7 @@ public class Maze {
 
 		}
 	}
-	
+
 	// reset status of each cell in maze
 	public void reset() {
 

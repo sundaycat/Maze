@@ -53,7 +53,7 @@ public class Maze {
 		int totalCells = row * col;
 
 		Cell curCell = maze[x][y];
-		Random rnd = new Random();
+		//Random rnd = new Random();
 		Stack<Cell> cellStack = new Stack<Cell>();
 		while (visitedCells < totalCells) {
 			
@@ -72,8 +72,8 @@ public class Maze {
 					|| !maze[x][y + 1].isVisit() || !maze[x][y - 1].isVisit()) {
 
 				// pick a random neighbor with all walls intact
-				//int dirs = (int) (myrandom() * 4) + 1; // prof's code
-				int dirs = rnd.nextInt(4) + 1;
+				int dirs = (int) (myrandom() * 4) + 1; // prof's code
+				//int dirs = rnd.nextInt(4) + 1;
 				switch (dirs) {
 				case 1: // Up
 					// If the upper cell hasn't been visit before, then remove walls

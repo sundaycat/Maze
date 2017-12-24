@@ -1,2 +1,2 @@
 # Maze
-Applied BFS, DFS to solve to solove a random generating maze problem
+Applied BFS, DFS algorithms to solve a randomly generating maze problem
